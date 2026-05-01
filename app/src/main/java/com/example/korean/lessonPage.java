@@ -31,6 +31,7 @@ public class lessonPage extends AppCompatActivity {
     private View achievementPopup;
     private View achievementGlow;
     private View vBlindingLight;
+    private View cvLessonImage;
     private DatabaseHelper dbHelper;
     private String userEmail;
     private SoundPool soundPool;
@@ -64,6 +65,7 @@ public class lessonPage extends AppCompatActivity {
         achievementPopup = findViewById(R.id.achievementPopup);
         achievementGlow = achievementPopup.findViewById(R.id.achievementGlow);
         vBlindingLight = findViewById(R.id.vBlindingLight);
+        cvLessonImage = findViewById(R.id.cvLessonImage);
         dbHelper = new DatabaseHelper(this);
 
         // Initialize SoundPool
@@ -265,6 +267,24 @@ public class lessonPage extends AppCompatActivity {
         tvRomanizationPhrase.setText(currentLesson.getRomanization());
         tvMeaningPhrase.setText(currentLesson.getMeaning());
         ivLessonImage.setImageResource(currentLesson.getImageResId());
+
+        // Adjust UI for Alphabet category
+        if ("Alphabet".equals(category)) {
+            cvLessonImage.setVisibility(View.GONE);
+            tvKoreanPhrase.setTextSize(80f); // Make Korean text much bigger
+        } else {
+            cvLessonImage.setVisibility(View.VISIBLE);
+            tvKoreanPhrase.setTextSize(40f); // Reset to original size
+            
+            // Adjust scaleType for specific images to ensure the whole subject is visible
+            String meaning = currentLesson.getMeaning();
+            if ("Grandmother".equals(meaning) || "Grandfather".equals(meaning) ||
+                "Grandparents".equals(meaning) || "Cousin".equals(meaning)) {
+                ivLessonImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            } else {
+                ivLessonImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+        }
         
         btnPrev.setEnabled(currentIndex > 0);
         
