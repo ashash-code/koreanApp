@@ -93,6 +93,7 @@ public class lessonPage extends AppCompatActivity {
         // Load lessons
         lessonList = LessonLibrary.getLessonsByCategory(category);
 
+
         // Initialize TTS
         tts = new TextToSpeech(this, status -> {
             if (status != TextToSpeech.ERROR) {
@@ -111,11 +112,6 @@ public class lessonPage extends AppCompatActivity {
                 // Save progress to database
                 if (userEmail != null) {
                     dbHelper.updateCategoryProgress(userEmail, category, currentIndex + 1, lessonList.size());
-                }
-
-                // If we just reached the last lesson, change button text to "Finish"
-                if (currentIndex == lessonList.size() - 1) {
-                    btnNext.setText("Finish");
                 }
             } else {
                 // We are at the last lesson and clicked "Finish"
@@ -271,6 +267,18 @@ public class lessonPage extends AppCompatActivity {
         ivLessonImage.setImageResource(currentLesson.getImageResId());
         
         btnPrev.setEnabled(currentIndex > 0);
+        
+        // Update Next button text
+        if (currentIndex == lessonList.size() - 1) {
+            btnNext.setText("Finish");
+        } else {
+            btnNext.setText("Next");
+        }
+
+        // Update progress bar
+        tvLessonProgress.setText((currentIndex + 1) + " / " + lessonList.size());
+        int progress = (int) (((float) (currentIndex + 1) / lessonList.size()) * 100);
+        pbLessonProgress.setProgress(progress);
     }
 
     @Override

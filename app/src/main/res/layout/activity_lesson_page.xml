@@ -198,7 +198,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Mark as Learned"
-            android:textColor="@color/blue_dark"
+            android:textColor="@color/blue_primary"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/btnNext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -210,6 +211,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Previous"
+            android:textSize="16sp"
+            android:textColor="@color/blue_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnNext"
             app:layout_constraintStart_toStartOf="parent"
@@ -223,6 +226,7 @@
             android:backgroundTint="@color/blue_primary"
             android:text="Next"
             android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btnPrev" />

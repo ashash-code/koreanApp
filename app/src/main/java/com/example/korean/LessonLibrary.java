@@ -41,6 +41,91 @@ public class LessonLibrary {
                 lessons.add(new Lesson("Numbers", "다섯", "Daseot", "Five (Native)", android.R.drawable.ic_menu_gallery));
                 break;
 
+            case "Family":
+                lessons.add(new Lesson("Family", "아버지", "Abeoji", "Father", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "어머니", "Eomeoni", "Mother", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "형", "Hyeong", "Older Brother (Male)", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "누나", "Nuna", "Older Sister (Male)", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "오빠", "Oppa", "Older Brother (Female)", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Older Sister (Female)", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Younger brother", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Younger sister", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Grandparents", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Grandmother", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Grandfather", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Wife", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Husband", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Boyfriend", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Girlfriend", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Relatives", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Family", "언니", "Eonni", "Cousin", android.R.drawable.ic_menu_gallery));
+                break;
+
+            case "Verbs":
+                lessons.add(new Lesson("Verbs", "가다", "Gada", "To go", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "오다", "Oda", "To come", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "먹다", "Meokda", "To eat", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "마시다", "Masida", "To drink", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "마시다", "Masida", "To see/watch", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To sleep", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To give", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To receive", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To know", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To not know", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To live", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To make", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To read", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To write", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To buy", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To hear/listen", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To speak/talk", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To meet", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Verbs", "자다", "Jada", "To wait", android.R.drawable.ic_menu_gallery));
+                break;
+
+            case "Places":
+                lessons.add(new Lesson("Places", "학교", "Hakgyo", "School", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Places", "집", "Jip", "Home", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Places", "병원", "Byeong-won", "Hospital", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Places", "식당", "Sikdang", "Restaurant", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Places", "공원", "Gong-won", "Park", android.R.drawable.ic_menu_gallery));
+                break;
+
+            case "Time":
+                lessons.add(new Lesson("Time", "오늘", "Oneul", "Today", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "내일", "Naeil", "Tomorrow", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "어제", "Eoje", "Yesterday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "지금", "Jigeum", "Now", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Morning", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Monday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Tuesday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Wednesday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Thursday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Friday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Saturday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Sunday", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "January", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "February", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "March", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "April", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "March", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "June", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "July", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "August", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "September", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "October", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "November", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "December", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Seconds", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Minutes", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Hours", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Days", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Weeks", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Months", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "Years", android.R.drawable.ic_menu_gallery));
+                lessons.add(new Lesson("Time", "아침", "Achim", "O'clock", android.R.drawable.ic_menu_gallery));
+                break;
+
             case "Colors":
                 lessons.add(new Lesson("Colors", "빨간색", "Ppal-gan-saek", "Red", R.drawable.red));
                 lessons.add(new Lesson("Colors", "주황색", "Ju-hwang-saek", "Orange", R.drawable.orange));
