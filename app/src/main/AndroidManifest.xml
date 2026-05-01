@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Korean">
+        <activity
+            android:name=".lessonCatPage"
+            android:exported="false" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="k-learn-7ff91.firebaseapp.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".registerPage"
+            android:exported="false" />
+        <activity
+            android:name=".profilePage"
+            android:exported="false" />
+        <activity
+            android:name=".translatePage"
+            android:exported="false" />
+        <activity
+            android:name=".quizPage"
+            android:exported="false" />
+        <activity
+            android:name=".lessonPage"
+            android:exported="false" />
+        <activity
+            android:name=".categoriesPage"
+            android:exported="false" />
+        <activity
+            android:name=".mainMenu"
+            android:exported="false" />
+        <activity
+            android:name=".settingsPage"
+            android:exported="false" />
+    </application>
+
+</manifest>

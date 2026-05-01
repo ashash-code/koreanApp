@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/windowBackground"
+    tools:context=".settingsPage">
+
+    <!-- Header Section -->
+    <View
+        android:id="@+id/headerBackground"
+        android:layout_width="0dp"
+        android:layout_height="80dp"
+        android:background="@color/blue_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:focusable="true"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back"
+        android:contentDescription="@string/back_button_desc"
+        app:layout_constraintBottom_toBottomOf="@id/headerBackground"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/headerBackground"
+        app:tint="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/logo_text"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/headerBackground"
+        app:layout_constraintStart_toEndOf="@id/ivBack"
+        app:layout_constraintTop_toTopOf="@id/headerBackground" />
+
+    <TextView
+        android:id="@+id/tvSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/settings_title"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@id/tvLogo"
+        app:layout_constraintStart_toEndOf="@id/tvLogo"
+        app:layout_constraintTop_toTopOf="@id/tvLogo" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Accessibility Section -->
+            <TextView
+                style="@style/SettingsHeader"
+                android:text="@string/accessibility" />
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvFontSizeLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/font_size"
+                    android:labelFor="@+id/spinnerFontSize" />
+                <Spinner
+                    android:id="@+id/spinnerFontSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:minWidth="48dp"
+                    android:entries="@array/font_sizes" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvDarkModeLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/dark_mode"
+                    android:importantForAccessibility="no" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchDarkModeSettings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp"
+                    android:contentDescription="@string/dark_mode" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvHighContrastLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/high_contrast_mode"
+                    android:labelFor="@+id/switchHighContrast" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchHighContrast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <!-- Audio Section -->
+            <TextView
+                style="@style/SettingsHeader"
+                android:text="@string/audio" />
+
+            <TextView
+                style="@style/SettingsItemText"
+                android:layout_width="match_parent"
+                android:layout_marginTop="8dp"
+                android:text="@string/pronunciation_volume" />
+            <SeekBar
+                android:id="@+id/seekPronunciationVolume"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:max="100"
+                android:progress="70" />
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvAutoPlayLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/auto_play_pronunciation"
+                    android:labelFor="@+id/switchAutoPlay" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchAutoPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <!-- Learning Section -->
+            <TextView
+                style="@style/SettingsHeader"
+                android:text="@string/learning" />
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvRemindersLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/daily_reminders"
+                    android:labelFor="@+id/switchReminders" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchReminders"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvRomanizationLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/show_romanization"
+                    android:labelFor="@+id/switchRomanization" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchRomanization"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    android:id="@+id/tvShuffleLabel"
+                    style="@style/SettingsItemText"
+                    android:text="@string/shuffle_quizzes"
+                    android:labelFor="@+id/switchShuffle" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchShuffle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minHeight="48dp" />
+            </LinearLayout>
+
+            <View style="@style/SettingsDivider" />
+
+            <!-- App Section -->
+            <TextView
+                style="@style/SettingsHeader"
+                android:text="@string/app" />
+
+            <LinearLayout
+                style="@style/SettingsItemContainer">
+                <TextView
+                    style="@style/SettingsItemText"
+                    android:text="@string/language_selection" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/english"
+                    android:textColor="@color/primary_blue" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnFeedback"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="@string/feedback_title" />
+
+            <Button
+                android:id="@+id/btnLogout"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="@string/logout"
+                android:textColor="#FF0000" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="feedback_categories">
+        <item>Bug Report</item>
+        <item>Feature Request</item>
+        <item>General Feedback</item>
+        <item>Content Issue</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="font_sizes">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+</resources>

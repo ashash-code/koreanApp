@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "882367026124",
+    "project_id": "k-learn-7ff91",
+    "storage_bucket": "k-learn-7ff91.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:882367026124:android:0e02fe4efd25cd804a4369",
+        "android_client_info": {
+          "package_name": "com.example.korean"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOeLV1ae5C2aKFy90wf8FvBczRjLDBPRc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
