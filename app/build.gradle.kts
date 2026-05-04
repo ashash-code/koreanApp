@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.play.services.auth)
     implementation(libs.mlkit.translate)
     implementation(libs.okhttp)
+    implementation(libs.androidx.work.runtime)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

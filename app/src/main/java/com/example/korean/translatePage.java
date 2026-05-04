@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.text.Editable;
@@ -36,7 +37,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class translatePage extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class translatePage extends BaseActivity {
 
     private EditText etInputText;
     private TextView tvTranslatedText, tvRomanization;
@@ -45,6 +49,16 @@ public class translatePage extends AppCompatActivity {
     private ImageButton btnSwapLang, btnCopy, btnClear, btnMic;
     private TextView tvSourceLang, tvTargetLang, tvModelStatus;
     private ProgressBar pbTranslate, pbModelDownload;
+    
+    // Achievement UI elements
+    private View achievementPopup;
+    private View achievementGlow;
+    private View vBlindingLight;
+    private DatabaseHelper dbHelper;
+    private String userEmail;
+    private android.media.SoundPool soundPool;
+    private int soundId;
+    private boolean soundLoaded = false;
 
     private static final int SPEECH_REQUEST_CODE = 100;
     private boolean isEnglishToKorean = true;
@@ -75,6 +89,31 @@ public class translatePage extends AppCompatActivity {
         tvModelStatus = findViewById(R.id.tvModelStatus);
         pbTranslate = findViewById(R.id.pbTranslate);
         pbModelDownload = findViewById(R.id.pbModelDownload);
+
+        // Initialize Achievement Views
+        achievementPopup = findViewById(R.id.achievementPopup);
+        achievementGlow = achievementPopup != null ? achievementPopup.findViewById(R.id.achievementGlow) : null;
+        vBlindingLight = findViewById(R.id.vBlindingLight);
+        dbHelper = new DatabaseHelper(this);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userEmail = user.getEmail();
+        }
+
+        // Initialize SoundPool
+        android.media.AudioAttributes audioAttributes = new android.media.AudioAttributes.Builder()
+                .setUsage(android.media.AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(android.media.AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        soundPool = new android.media.SoundPool.Builder()
+                .setMaxStreams(1)
+                .setAudioAttributes(audioAttributes)
+                .build();
+        soundId = soundPool.load(this, R.raw.achieved, 1);
+        soundPool.setOnLoadCompleteListener((pool, sampleId, status) -> {
+            if (status == 0) soundLoaded = true;
+        });
 
         initDictionary();
         setupTranslators();
@@ -277,21 +316,27 @@ public class translatePage extends AppCompatActivity {
                                 tvTranslatedText.setText(translatedText);
                                 
                                 // Show Romanization if the result is Korean
+                                SharedPreferences prefs = getSharedPreferences("KLearnPrefs", MODE_PRIVATE);
+                                boolean showRomanization = prefs.getBoolean("show_romanization", true);
+
                                 if (isEnglishToKorean) {
                                     String roman = RomanizationEngine.hangeulToRoman(translatedText);
                                     tvRomanization.setText(roman);
-                                    tvRomanization.setVisibility(View.VISIBLE);
+                                    tvRomanization.setVisibility(showRomanization ? View.VISIBLE : View.GONE);
                                 } else {
                                     // If result is English, we can show the Hangeul we translated FROM in the romanization field
                                     if (!finalInput.equals(originalInput)) {
                                         tvRomanization.setText(finalInput); // This is the Hangeul version of "shiro"
-                                        tvRomanization.setVisibility(View.VISIBLE);
+                                        tvRomanization.setVisibility(showRomanization ? View.VISIBLE : View.GONE);
                                     }
                                 }
                                 
                                 btnCopy.setVisibility(View.VISIBLE);
                                 btnTranslateAction.setEnabled(true);
                                 btnTranslateAction.setText(R.string.translate_button);
+                                
+                                // Track achievement progress
+                                checkPolyglotAchievement();
                             })
                             .addOnFailureListener(e -> {
                                 Log.e("Translator", "Translation error", e);
@@ -344,6 +389,9 @@ public class translatePage extends AppCompatActivity {
                 tvRomanization.setVisibility(View.GONE);
             }
             Toast.makeText(this, "Using offline vocabulary...", Toast.LENGTH_SHORT).show();
+            
+            // Track achievement progress
+            checkPolyglotAchievement();
         } else {
             tvTranslatedText.setText(R.string.error_not_found);
             Toast.makeText(this, "Wait for model download or check connection.", Toast.LENGTH_LONG).show();
@@ -390,5 +438,102 @@ public class translatePage extends AppCompatActivity {
                 performTranslation();
             }
         }
+    }
+
+    private void checkPolyglotAchievement() {
+        if (userEmail == null) return;
+        
+        dbHelper.incrementTranslationCount(userEmail);
+        int count = dbHelper.getTranslationCount(userEmail);
+        
+        if (count >= 5 && !dbHelper.hasAchievement(userEmail, "Polyglot")) {
+            showAchievement("Polyglot");
+        }
+    }
+
+    private void showAchievement(String name) {
+        if (userEmail != null && !dbHelper.hasAchievement(userEmail, name)) {
+            dbHelper.unlockAchievement(userEmail, name);
+        }
+
+        if (achievementPopup == null) return;
+
+        // Update popup UI
+        TextView tvName = achievementPopup.findViewById(R.id.tvAchievementName);
+        ImageView ivIcon = achievementPopup.findViewById(R.id.ivBadgeIcon);
+        if (tvName != null) tvName.setText(name);
+        if (ivIcon != null) {
+            ivIcon.setImageResource(R.drawable.ic_translate);
+            ivIcon.setColorFilter(androidx.core.content.ContextCompat.getColor(this, R.color.blue_primary), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+
+        achievementPopup.setOnClickListener(v -> {
+            achievementPopup.setVisibility(View.GONE);
+        });
+
+        View ivCloseBtn = achievementPopup.findViewById(R.id.ivClose);
+        if (ivCloseBtn != null) {
+            ivCloseBtn.setOnClickListener(v -> {
+                achievementPopup.setVisibility(View.GONE);
+            });
+        }
+
+        triggerAchievementUI(() -> {
+            achievementPopup.setVisibility(View.VISIBLE);
+            android.view.animation.Animation slideUp = android.view.animation.AnimationUtils.loadAnimation(translatePage.this, R.anim.slide_up);
+            achievementPopup.startAnimation(slideUp);
+
+            if (achievementGlow != null) {
+                android.view.animation.Animation pulse = android.view.animation.AnimationUtils.loadAnimation(translatePage.this, R.anim.pulse);
+                achievementGlow.startAnimation(pulse);
+            }
+        });
+    }
+
+    private void triggerAchievementUI(Runnable onFinished) {
+        // Play achievement sound reliably
+        try {
+            android.media.MediaPlayer mp = android.media.MediaPlayer.create(this, R.raw.achieved);
+            if (mp != null) {
+                mp.setOnCompletionListener(android.media.MediaPlayer::release);
+                mp.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if (vBlindingLight != null) {
+            vBlindingLight.setVisibility(View.VISIBLE);
+            android.view.animation.Animation blind = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.blinding_light);
+            
+            blind.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(android.view.animation.Animation animation) {}
+
+                @Override
+                public void onAnimationEnd(android.view.animation.Animation animation) {
+                    vBlindingLight.setVisibility(View.GONE);
+                    if (onFinished != null) onFinished.run();
+                }
+
+                @Override
+                public void onAnimationRepeat(android.view.animation.Animation animation) {}
+            });
+            
+            vBlindingLight.startAnimation(blind);
+        }
+    }
+
+    private void triggerAchievementUI() {
+        triggerAchievementUI(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (soundPool != null) {
+            soundPool.release();
+            soundPool = null;
+        }
+        super.onDestroy();
     }
 }

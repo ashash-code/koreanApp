@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?android:attr/windowBackground"
     tools:context=".lessonPage">
 
     <!-- Header Section -->
@@ -68,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="1 / 10"
-        android:textColor="@color/grey_dark"
+        android:textColor="?android:attr/textColorSecondary"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -113,6 +113,7 @@
 
                 <!-- Illustration -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cvLessonImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="20dp"
@@ -130,40 +131,47 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Phrase Section -->
-                <TextView
-                    android:id="@+id/tvKoreanPhrase"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:text="안녕하세요"
-                    android:textColor="@color/black"
-                    android:textSize="40sp"
-                    android:textStyle="bold"
-                    android:textAlignment="center" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tvRomanizationPhrase"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Annyeonghaseyo"
-                    android:textColor="@color/blue_primary"
-                    android:textSize="22sp" />
+                    <TextView
+                        android:id="@+id/tvMeaningPhrase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hello"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:textSize="24sp"
+                        android:textStyle="italic" />
 
-                <View
-                    android:layout_width="150dp"
-                    android:layout_height="2dp"
-                    android:layout_marginVertical="24dp"
-                    android:background="@color/blue_light" />
+                    <View
+                        android:id="@+id/meaningDivider"
+                        android:layout_width="150dp"
+                        android:layout_height="2dp"
+                        android:layout_marginVertical="24dp"
+                        android:background="@color/blue_light" />
 
-                <TextView
-                    android:id="@+id/tvMeaningPhrase"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hello"
-                    android:textColor="@color/grey_dark"
-                    android:textSize="24sp"
-                    android:textStyle="italic" />
+                    <TextView
+                        android:id="@+id/tvKoreanPhrase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="안녕하세요"
+                        android:textColor="?android:attr/textColorPrimary"
+                        android:textSize="40sp"
+                        android:textStyle="bold"
+                        android:textAlignment="center" />
+
+                    <TextView
+                        android:id="@+id/tvRomanizationPhrase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Annyeonghaseyo"
+                        android:textColor="@color/blue_primary"
+                        android:textSize="22sp" />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
@@ -198,7 +206,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Mark as Learned"
-            android:textColor="@color/blue_dark"
+            android:textColor="@color/blue_primary"
+            android:textSize="16sp"
             app:layout_constraintBottom_toTopOf="@id/btnNext"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -210,6 +219,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:text="Previous"
+            android:textSize="16sp"
+            android:textColor="@color/blue_primary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnNext"
             app:layout_constraintStart_toStartOf="parent"
@@ -223,28 +234,29 @@
             android:backgroundTint="@color/blue_primary"
             android:text="Next"
             android:textColor="@color/white"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btnPrev" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
-        android:id="@+id/achievementPopup"
-        layout="@layout/layout_achievement_popup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
     <!-- Blinding Light Overlay -->
     <View
         android:id="@+id/vBlindingLight"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
+        android:background="@drawable/flash_glow"
         android:visibility="gone"
+        android:elevation="99dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/achievementPopup"
+        layout="@layout/layout_achievement_popup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -119,7 +119,7 @@
                         android:padding="10dp"
                         android:src="@drawable/ic_swap"
                         android:contentDescription="@string/swap_languages_desc"
-                        app:tint="#5F6368" />
+                        app:tint="?android:attr/textColorSecondary" />
 
                     <TextView
                         android:id="@+id/tvTargetLang"
@@ -158,7 +158,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/model_status_checking"
-                    android:textColor="#757575"
+                    android:textColor="?android:attr/textColorSecondary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -236,7 +236,7 @@
                             android:src="@drawable/ic_clear"
                             android:contentDescription="@string/clear_button_desc"
                             android:visibility="gone"
-                            app:tint="#9AA0A6" />
+                            app:tint="?android:attr/textColorSecondary" />
                     </LinearLayout>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -286,7 +286,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/translation_label"
-                        android:textColor="#70757A"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
 
@@ -304,7 +304,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="#70757A"
+                        android:textColor="?android:attr/textColorSecondary"
                         android:textSize="16sp"
                         android:textStyle="italic"
                         android:visibility="gone" />
@@ -338,5 +338,23 @@
             </com.google.android.material.card.MaterialCardView>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- Blinding Light Overlay -->
+    <View
+        android:id="@+id/vBlindingLight"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/flash_glow"
+        android:visibility="gone"
+        android:elevation="99dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/achievementPopup"
+        layout="@layout/layout_achievement_popup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
