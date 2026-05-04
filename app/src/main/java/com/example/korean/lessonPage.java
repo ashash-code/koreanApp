@@ -1,55 +1,58 @@
 package com.example.korean;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.AudioAttributes;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 import java.util.Locale;
 
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.media.AudioAttributes;
-import android.media.SoundPool;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+public class lessonPage extends BaseActivity {
 
-public class lessonPage extends AppCompatActivity {
-
-    private TextView tvCategoryTitle, tvLessonProgress, tvKoreanPhrase, tvRomanizationPhrase, tvMeaningPhrase, tvLogo;
+    private TextView tvCategoryTitle, tvLessonProgress, tvKoreanPhrase, tvRomanizationPhrase, tvMeaningPhrase;
     private ImageView ivLessonImage, ivBack;
     private Button btnPrev, btnNext, btnMarkComplete;
-    private com.google.android.material.floatingactionbutton.FloatingActionButton btnPronounce;
+    private FloatingActionButton btnPronounce;
     private ProgressBar pbLessonProgress;
-    private View achievementPopup;
-    private View achievementGlow;
-    private View vBlindingLight;
-    private View cvLessonImage;
+    private View cvLessonImage, meaningDivider;
     private DatabaseHelper dbHelper;
     private String userEmail;
     private SoundPool soundPool;
     private int soundId;
     private boolean soundLoaded = false;
+    private android.media.MediaPlayer mediaPlayer;
 
     private List<Lesson> lessonList;
     private int currentIndex = 0;
     private String category;
     private TextToSpeech tts;
 
+    private View achievementPopup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lesson_page);
 
-        // Initialize Views
-        tvLogo = findViewById(R.id.tvLogo);
+        achievementPopup = findViewById(R.id.achievementPopup);
+
+        // Initialize views
         tvCategoryTitle = findViewById(R.id.tvCategoryTitle);
         tvLessonProgress = findViewById(R.id.tvLessonProgress);
         tvKoreanPhrase = findViewById(R.id.tvKoreanPhrase);
@@ -62,10 +65,9 @@ public class lessonPage extends AppCompatActivity {
         btnMarkComplete = findViewById(R.id.btnMarkComplete);
         btnPronounce = findViewById(R.id.btnPronounce);
         pbLessonProgress = findViewById(R.id.pbLessonProgress);
-        achievementPopup = findViewById(R.id.achievementPopup);
-        achievementGlow = achievementPopup.findViewById(R.id.achievementGlow);
-        vBlindingLight = findViewById(R.id.vBlindingLight);
         cvLessonImage = findViewById(R.id.cvLessonImage);
+        meaningDivider = findViewById(R.id.meaningDivider);
+
         dbHelper = new DatabaseHelper(this);
 
         // Initialize SoundPool
@@ -110,16 +112,14 @@ public class lessonPage extends AppCompatActivity {
             if (currentIndex < lessonList.size() - 1) {
                 currentIndex++;
                 updateUI();
-                
-                // Save progress to database
-                if (userEmail != null) {
-                    dbHelper.updateCategoryProgress(userEmail, category, currentIndex + 1, lessonList.size());
-                }
             } else {
                 // We are at the last lesson and clicked "Finish"
+                if (userEmail != null) {
+                    dbHelper.updateCategoryProgress(userEmail, category, lessonList.size(), lessonList.size(), "LESSON");
+                }
+
                 String achievementName = null;
                 String intentExtra = null;
-                int badgeIconRes = R.drawable.ic_colors;
 
                 if ("Colors".equals(category)) {
                     achievementName = "Artist";
@@ -127,68 +127,33 @@ public class lessonPage extends AppCompatActivity {
                 } else if ("Alphabet".equals(category)) {
                     achievementName = "Scholar";
                     intentExtra = "SHOW_SCHOLAR_POP";
-                    badgeIconRes = R.drawable.ic_alphabet;
                 } else if ("Greetings".equals(category)) {
                     achievementName = "Polite";
                     intentExtra = "SHOW_POLITE_POP";
-                    badgeIconRes = R.drawable.ic_greetings;
                 } else if ("Numbers".equals(category)) {
                     achievementName = "Mathematician";
                     intentExtra = "SHOW_MATH_POP";
-                    badgeIconRes = R.drawable.ic_numbers;
                 } else if ("Food".equals(category)) {
                     achievementName = "Gourmet";
                     intentExtra = "SHOW_GOURMET_POP";
-                    badgeIconRes = R.drawable.ic_food;
                 } else if ("Places".equals(category)) {
                     achievementName = "Wayfarer";
                     intentExtra = "SHOW_PLACES_POP";
-                    badgeIconRes = R.drawable.ic_places;
-                } else if ("Family".equals(category)) {
-                    achievementName = "Relative";
-                    intentExtra = "SHOW_FAMILY_POP";
-                    badgeIconRes = R.drawable.ic_family;
-                } else if ("Verbs".equals(category)) {
-                    achievementName = "Active";
-                    intentExtra = "SHOW_VERBS_POP";
-                    badgeIconRes = R.drawable.ic_verbs;
                 } else if ("Time".equals(category)) {
                     achievementName = "Chronos";
                     intentExtra = "SHOW_TIME_POP";
-                    badgeIconRes = R.drawable.ic_time;
+                } else if ("Family".equals(category)) {
+                    achievementName = "Kinship";
+                    intentExtra = "SHOW_FAMILY_POP";
+                } else if ("Verbs".equals(category)) {
+                    achievementName = "Active";
+                    intentExtra = "SHOW_VERBS_POP";
                 }
 
-                if (achievementName != null) {
-                    final String finalExtra = intentExtra;
-                    
-                    // Update popup UI for specific achievement
-                    TextView tvName = achievementPopup.findViewById(R.id.tvAchievementName);
-                    ImageView ivIcon = achievementPopup.findViewById(R.id.ivBadgeIcon);
-                    if (tvName != null) tvName.setText(achievementName);
-                    if (ivIcon != null) ivIcon.setImageResource(badgeIconRes);
-
-                    achievementPopup.setOnClickListener(v2 -> {
-                        achievementPopup.setVisibility(View.GONE);
-                        android.content.Intent intent = new android.content.Intent(lessonPage.this, profilePage.class);
-                        intent.putExtra(finalExtra, true);
-                        startActivity(intent);
-                        finish();
-                    });
-
-                    View ivCloseBtn = achievementPopup.findViewById(R.id.ivClose);
-                    if (ivCloseBtn != null) {
-                        ivCloseBtn.setOnClickListener(v2 -> {
-                            achievementPopup.setVisibility(View.GONE);
-                            android.content.Intent intent = new android.content.Intent(lessonPage.this, profilePage.class);
-                            intent.putExtra(finalExtra, true);
-                            startActivity(intent);
-                            finish();
-                        });
-                    }
-
-                    showAchievement(achievementName);
+                if (achievementName != null && userEmail != null) {
+                    dbHelper.unlockAchievement(userEmail, achievementName);
+                    showAchievement(intentExtra);
                 } else {
-                    Toast.makeText(this, "Category Completed!", Toast.LENGTH_SHORT).show();
                     finish();
                 }
             }
@@ -202,65 +167,105 @@ public class lessonPage extends AppCompatActivity {
         });
 
         btnPronounce.setOnClickListener(v -> {
-            String text = lessonList.get(currentIndex).getKorean();
-            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+            if (lessonList != null && currentIndex < lessonList.size()) {
+                playLessonAudio(lessonList.get(currentIndex));
+            }
         });
 
         btnMarkComplete.setOnClickListener(v -> {
-            Toast.makeText(this, "Marked as learned!", Toast.LENGTH_SHORT).show();
+             if (userEmail != null) {
+                 dbHelper.updateCategoryProgress(userEmail, category, currentIndex + 1, lessonList.size(), "LESSON");
+                 Toast.makeText(this, "Progress Saved!", Toast.LENGTH_SHORT).show();
+             }
         });
 
         updateUI();
+        checkLearnerAchievement();
     }
 
-    private void showAchievement(String name) {
-        // Unlock in database if not already there
-        if (userEmail != null && !dbHelper.hasAchievement(userEmail, name)) {
-            dbHelper.unlockAchievement(userEmail, name);
+    private void showAchievement(String intentExtra) {
+        if (achievementPopup == null) {
+            Intent intent = new Intent(this, mainMenu.class);
+            intent.putExtra(intentExtra, true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        // Play achievement sound
+        try {
+            MediaPlayer achievementPlayer = MediaPlayer.create(this, R.raw.achieved);
+            if (achievementPlayer != null) {
+                achievementPlayer.setOnCompletionListener(MediaPlayer::release);
+                achievementPlayer.start();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Map intent extra back to achievement name and icon
+        String achievementDisplayName = "Achievement Unlocked!";
+        int iconRes = R.drawable.ic_learn;
+        
+        if ("SHOW_ARTIST_POP".equals(intentExtra)) { achievementDisplayName = "Artist"; iconRes = R.drawable.ic_colors; }
+        else if ("SHOW_SCHOLAR_POP".equals(intentExtra)) { achievementDisplayName = "Scholar"; iconRes = R.drawable.ic_alphabet; }
+        else if ("SHOW_POLITE_POP".equals(intentExtra)) { achievementDisplayName = "Polite"; iconRes = R.drawable.ic_greetings; }
+        else if ("SHOW_MATH_POP".equals(intentExtra)) { achievementDisplayName = "Mathematician"; iconRes = R.drawable.ic_numbers; }
+        else if ("SHOW_GOURMET_POP".equals(intentExtra)) { achievementDisplayName = "Gourmet"; iconRes = R.drawable.ic_food; }
+        else if ("SHOW_PLACES_POP".equals(intentExtra)) { achievementDisplayName = "Wayfarer"; iconRes = R.drawable.ic_places; }
+        else if ("SHOW_TIME_POP".equals(intentExtra)) { achievementDisplayName = "Chronos"; iconRes = R.drawable.ic_time; }
+        else if ("SHOW_FAMILY_POP".equals(intentExtra)) { achievementDisplayName = "Kinship"; iconRes = R.drawable.ic_family; }
+        else if ("SHOW_VERBS_POP".equals(intentExtra)) { achievementDisplayName = "Active"; iconRes = R.drawable.ic_verbs; }
+        else if ("SHOW_LEARNER_POP".equals(intentExtra)) { achievementDisplayName = "Learner"; iconRes = R.drawable.ic_learn; }
+
+        TextView tvName = achievementPopup.findViewById(R.id.tvAchievementName);
+        ImageView ivIcon = achievementPopup.findViewById(R.id.ivBadgeIcon);
+        if (tvName != null) tvName.setText(achievementDisplayName);
+        if (ivIcon != null) ivIcon.setImageResource(iconRes);
+
+        View ivClose = achievementPopup.findViewById(R.id.ivClose);
+        if (ivClose != null) {
+            ivClose.setOnClickListener(v -> {
+                achievementPopup.setVisibility(View.GONE);
+                Intent intent = new Intent(this, profilePage.class);
+                intent.putExtra(intentExtra, true);
+                intent.putExtra("FROM_ACHIEVEMENT", true);
+                startActivity(intent);
+            });
         }
         
-        // Always trigger the celebration UI when the category is finished
-        triggerAchievementUI();
+        achievementPopup.setOnClickListener(v -> {
+            achievementPopup.setVisibility(View.GONE);
+        });
+
+        achievementPopup.setVisibility(View.VISIBLE);
+        Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.slide_up);
+        achievementPopup.startAnimation(slideUp);
     }
 
-    private void triggerAchievementUI() {
-        // Play Sound
-        if (soundLoaded) {
-            soundPool.play(soundId, 1f, 1f, 1, 0, 1f);
+    private void checkLearnerAchievement() {
+        if (userEmail == null) return;
+        
+        // Count how many categories are completed
+        int completedCount = 0;
+        String[] categories = {"Greetings", "Food", "Alphabet", "Numbers", "Family", "Verbs", "Places", "Time", "Colors"};
+        for (String cat : categories) {
+             if (dbHelper.getCategoryProgress(userEmail, cat, "LESSON") >= 100) {
+                 completedCount++;
+             }
         }
 
-        // Blinding Light Effect
-        vBlindingLight.setVisibility(View.VISIBLE);
-        Animation blind = AnimationUtils.loadAnimation(this, R.anim.blinding_light);
-        vBlindingLight.startAnimation(blind);
-
-        blind.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {}
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                vBlindingLight.setVisibility(View.GONE);
-                
-                // Show Achievement Popup
-                achievementPopup.setVisibility(View.VISIBLE);
-                Animation slideUp = AnimationUtils.loadAnimation(lessonPage.this, R.anim.slide_up);
-                achievementPopup.startAnimation(slideUp);
-
-                // Light/Glow animation
-                if (achievementGlow != null) {
-                    Animation pulse = AnimationUtils.loadAnimation(lessonPage.this, R.anim.pulse);
-                    achievementGlow.startAnimation(pulse);
-                }
+        if (completedCount >= 3) {
+            if (!dbHelper.hasAchievement(userEmail, "Learner")) {
+                dbHelper.unlockAchievement(userEmail, "Learner");
+                showAchievement("SHOW_LEARNER_POP");
             }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {}
-        });
+        }
     }
 
     private void updateUI() {
-        if (lessonList.isEmpty()) return;
+        if (lessonList == null || lessonList.isEmpty()) return;
 
         Lesson currentLesson = lessonList.get(currentIndex);
         tvKoreanPhrase.setText(currentLesson.getKorean());
@@ -268,41 +273,102 @@ public class lessonPage extends AppCompatActivity {
         tvMeaningPhrase.setText(currentLesson.getMeaning());
         ivLessonImage.setImageResource(currentLesson.getImageResId());
 
-        // Adjust UI for Alphabet category
+        tvLessonProgress.setText((currentIndex + 1) + " / " + lessonList.size());
+        int progress = (int) (((float) (currentIndex + 1) / lessonList.size()) * 100);
+        pbLessonProgress.setProgress(progress);
+
+        // Category specific UI adjustments
         if ("Alphabet".equals(category)) {
+            tvKoreanPhrase.setTextSize(100);
             cvLessonImage.setVisibility(View.GONE);
-            tvKoreanPhrase.setTextSize(80f); // Make Korean text much bigger
+            meaningDivider.setVisibility(View.VISIBLE);
+            tvMeaningPhrase.setVisibility(View.VISIBLE);
+            tvRomanizationPhrase.setVisibility(View.VISIBLE);
+            tvMeaningPhrase.setTextSize(30);
+            tvRomanizationPhrase.setTextSize(22);
+        } else if ("Numbers".equals(category)) {
+            // Numbers special layout: meaning (number) is big, korean and romanization are smaller below it
+            tvKoreanPhrase.setTextSize(36);
+            tvRomanizationPhrase.setTextSize(22);
+            tvMeaningPhrase.setTextSize(80);
+            tvMeaningPhrase.setTypeface(null, android.graphics.Typeface.BOLD);
+            cvLessonImage.setVisibility(View.GONE);
+            meaningDivider.setVisibility(View.VISIBLE);
+            tvMeaningPhrase.setVisibility(View.VISIBLE);
+            tvRomanizationPhrase.setVisibility(View.VISIBLE);
+
+            // Swap positions conceptually by setting text
+            tvMeaningPhrase.setText(currentLesson.getMeaning()); // Big number
+            tvKoreanPhrase.setText(currentLesson.getKorean());
+            tvRomanizationPhrase.setText(currentLesson.getRomanization());
         } else {
+            tvKoreanPhrase.setTextSize(48);
+            tvRomanizationPhrase.setTextSize(22);
+            tvMeaningPhrase.setTextSize(24);
+            tvMeaningPhrase.setTypeface(null, android.graphics.Typeface.ITALIC);
             cvLessonImage.setVisibility(View.VISIBLE);
-            tvKoreanPhrase.setTextSize(40f); // Reset to original size
-            
-            // Adjust scaleType for specific images to ensure the whole subject is visible
-            String meaning = currentLesson.getMeaning();
-            if ("Grandmother".equals(meaning) || "Grandfather".equals(meaning) ||
-                "Grandparents".equals(meaning) || "Cousin".equals(meaning)) {
+            meaningDivider.setVisibility(View.VISIBLE);
+            tvMeaningPhrase.setVisibility(View.VISIBLE);
+            tvRomanizationPhrase.setVisibility(View.VISIBLE);
+
+            // Zoom out images for specific categories
+            if ("Food".equals(category) || "Greetings".equals(category) || "Places".equals(category) ||
+                "Family".equals(category) || "Verbs".equals(category) || "Time".equals(category)) {
                 ivLessonImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
             } else {
                 ivLessonImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
             }
         }
-        
+
         btnPrev.setEnabled(currentIndex > 0);
-        
-        // Update Next button text
         if (currentIndex == lessonList.size() - 1) {
             btnNext.setText("Finish");
         } else {
             btnNext.setText("Next");
         }
+    }
 
-        // Update progress bar
-        tvLessonProgress.setText((currentIndex + 1) + " / " + lessonList.size());
-        int progress = (int) (((float) (currentIndex + 1) / lessonList.size()) * 100);
-        pbLessonProgress.setProgress(progress);
+    private void playLessonAudio(Lesson lesson) {
+        // Release previous mediaPlayer if it exists
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mediaPlayer = null;
+        }
+
+        if (lesson.getAudioResId() != 0) {
+            mediaPlayer = android.media.MediaPlayer.create(this, lesson.getAudioResId());
+            
+            if (mediaPlayer != null) {
+                // Apply Volume Setting
+                SharedPreferences prefs = getSharedPreferences("KLearnPrefs", MODE_PRIVATE);
+                float volume = prefs.getInt("volume", 70) / 100f;
+                mediaPlayer.setVolume(volume, volume);
+                
+                mediaPlayer.setOnCompletionListener(mp -> {
+                    mp.release();
+                    if (mediaPlayer == mp) {
+                        mediaPlayer = null;
+                    }
+                });
+                mediaPlayer.start();
+            } else if (tts != null) {
+                // Fallback to TTS if MediaPlayer failed
+                String text = lesson.getKorean();
+                tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+            }
+        } else if (tts != null) {
+            String text = lesson.getKorean();
+            tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, null);
+        }
     }
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         if (tts != null) {
             tts.stop();
             tts.shutdown();
@@ -311,6 +377,13 @@ public class lessonPage extends AppCompatActivity {
             soundPool.release();
             soundPool = null;
         }
-        super.onDestroy();
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            mediaPlayer = null;
+        }
     }
 }

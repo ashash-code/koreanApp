@@ -62,8 +62,15 @@ public class RomanizationEngine {
         Map<String, String> commonMap = new HashMap<>();
         commonMap.put("annyeong", "안녕");
         commonMap.put("annyeonghaseyo", "안녕하세요");
-        commonMap.put("kamsahamnida", "감사합니다");
         commonMap.put("gamsahamnida", "감사합니다");
+        commonMap.put("kamsahamnida", "감사합니다");
+        commonMap.put("gwenchana", "괜찮아");
+        commonMap.put("gwenchanha", "괜찮아");
+        commonMap.put("kwenchana", "괜찮아");
+        commonMap.put("gwenchanayo", "괜찮아요");
+        commonMap.put("gwenchanhayo", "괜찮아요");
+        commonMap.put("mianhae", "미안해");
+        commonMap.put("joesonghamnida", "죄송합니다");
         commonMap.put("saranghae", "사랑해");
         commonMap.put("oppa", "오빠");
         commonMap.put("unnie", "언니");

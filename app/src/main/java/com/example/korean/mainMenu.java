@@ -26,10 +26,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class mainMenu extends AppCompatActivity {
+public class mainMenu extends BaseActivity {
 
-    private LinearLayout btnLearn, btnTranslate, btnQuiz;
-    private TextView drawerProfile, drawerFeedback, drawerSettings, tvStreakCount;
+    private LinearLayout btnLearn, btnTranslate, btnQuiz, weeklyStreakContainer;
+    private TextView drawerProfile, drawerSettings, tvStreakCount;
     private ImageView ivHamburger;
     private DrawerLayout drawerLayout;
     private SwitchMaterial switchDarkMode;
@@ -52,6 +52,7 @@ public class mainMenu extends AppCompatActivity {
         switchDarkMode = findViewById(R.id.switchDarkMode);
         calendarView = findViewById(R.id.calendarView);
         tvStreakCount = findViewById(R.id.tvStreakCount);
+        weeklyStreakContainer = findViewById(R.id.weeklyStreakContainer);
 
         androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             androidx.core.graphics.Insets systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
@@ -59,12 +60,14 @@ public class mainMenu extends AppCompatActivity {
             return insets;
         });
         
-        // Set switch state based on current theme
-        int nightMode = AppCompatDelegate.getDefaultNightMode();
-        switchDarkMode.setChecked(nightMode == AppCompatDelegate.MODE_NIGHT_YES);
+        // Set switch state based on saved preference
+        android.content.SharedPreferences prefs = getSharedPreferences("KLearnPrefs", MODE_PRIVATE);
+        boolean isDarkMode = prefs.getBoolean("dark_mode", false);
+        switchDarkMode.setChecked(isDarkMode);
 
         switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (buttonView.isPressed()) { // Only trigger if the user actually clicked it
+            if (buttonView.isPressed()) {
+                prefs.edit().putBoolean("dark_mode", isChecked).apply();
                 if (isChecked) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                 } else {
@@ -80,7 +83,6 @@ public class mainMenu extends AppCompatActivity {
 
         // Drawer items
         drawerProfile = findViewById(R.id.drawerProfile);
-        drawerFeedback = findViewById(R.id.drawerFeedback);
         drawerSettings = findViewById(R.id.drawerSettings);
 
         // Hamburger logic
@@ -93,7 +95,6 @@ public class mainMenu extends AppCompatActivity {
 
         // Navigation Logic for Drawer
         drawerProfile.setOnClickListener(v -> navigateTo(profilePage.class));
-        drawerFeedback.setOnClickListener(v -> Toast.makeText(this, "Feedback feature coming soon!", Toast.LENGTH_SHORT).show());
         drawerSettings.setOnClickListener(v -> navigateTo(settingsPage.class));
 
         loadActivityStats();
@@ -102,6 +103,14 @@ public class mainMenu extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        
+        // Sync Dark Mode switch state
+        android.content.SharedPreferences prefs = getSharedPreferences("KLearnPrefs", MODE_PRIVATE);
+        boolean isDarkMode = prefs.getBoolean("dark_mode", false);
+        if (switchDarkMode != null) {
+            switchDarkMode.setChecked(isDarkMode);
+        }
+
         loadActivityStats();
     }
 
@@ -115,15 +124,49 @@ public class mainMenu extends AppCompatActivity {
             int streak = calculateStreak(quizDates);
             tvStreakCount.setText(getString(R.string.streak_format, streak));
 
+            updateWeeklyStreakUI(quizDates);
+
             // For CalendarView highlighting, we can't easily change individual cell backgrounds 
             // without a custom adapter or library like MaterialCalendarView.
-            // We can toast the result of a selected date if it was a quiz day.
             calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
                 String selectedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
                 if (quizDates.contains(selectedDate)) {
                     Toast.makeText(mainMenu.this, R.string.quiz_completed_on_this_day, Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+    }
+
+    private void updateWeeklyStreakUI(List<String> quizDates) {
+        if (weeklyStreakContainer == null) return;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+
+        String[] days = {"M", "T", "W", "T", "F", "S", "S"};
+
+        for (int i = 0; i < 7; i++) {
+            View dayView = weeklyStreakContainer.getChildAt(i);
+            if (dayView == null) continue;
+
+            TextView tvDayLabel = dayView.findViewById(R.id.tvDayLabel);
+            ImageView ivStreakStatus = dayView.findViewById(R.id.ivStreakStatus);
+
+            tvDayLabel.setText(days[i]);
+            String dateStr = sdf.format(cal.getTime());
+
+            if (quizDates.contains(dateStr)) {
+                ivStreakStatus.setImageResource(R.drawable.ic_circle_filled);
+                ivStreakStatus.setColorFilter(null); // Use original orange color
+            } else {
+                ivStreakStatus.setImageResource(R.drawable.ic_circle_outline);
+                // Set tint based on theme
+                ivStreakStatus.setColorFilter(getResources().getColor(android.R.color.darker_gray, getTheme()));
+            }
+
+            cal.add(Calendar.DATE, 1);
         }
     }
 

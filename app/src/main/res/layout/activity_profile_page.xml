@@ -1,52 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/windowBackground"
     tools:context=".profilePage">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/windowBackground">
 
     <!-- Header Section Inspired by the provided UI -->
     <View
         android:id="@+id/headerBackground"
         android:layout_width="0dp"
         android:layout_height="80dp"
-        android:background="@color/blue_primary"
+        android:background="@color/korean_blue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/ivBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="4dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:padding="12dp"
-        android:src="@drawable/ic_back"
-        android:contentDescription="@string/back_button_desc"
-        app:layout_constraintBottom_toBottomOf="@id/headerBackground"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/headerBackground"
-        app:tint="@android:color/white" />
 
     <TextView
         android:id="@+id/tvLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="20dp"
         android:text="@string/logo_text"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/headerBackground"
-        app:layout_constraintStart_toEndOf="@id/ivBack"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/headerBackground" />
 
     <TextView
@@ -61,16 +48,70 @@
         app:layout_constraintStart_toEndOf="@id/tvLogo"
         app:layout_constraintTop_toTopOf="@id/tvLogo" />
 
+    <!-- Hamburger Menu Icon -->
+    <ImageView
+        android:id="@+id/ivHamburger"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Menu"
+        android:src="@drawable/ic_hamburger"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBackground"
+        app:tint="?android:attr/textColorPrimary" />
 
+    <!-- Back Arrow Icon (Shown only when coming from Achievement) -->
+    <ImageView
+        android:id="@+id/ivBackArrow"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="gone"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/back_button_desc"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/headerBackground"
+        app:tint="?android:attr/textColorPrimary" />
+
+    <!-- Barrier to ensure content and switch are aligned to whichever icon is visible -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/iconBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ivHamburger,ivBackArrow" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchDarkMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/dark_mode"
+        android:textColor="?android:attr/textColorPrimary"
+        app:layout_constraintBottom_toBottomOf="@id/iconBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivHamburger" />
 
     <!-- Profile Content -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/profileScrollView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerBackground">
+        app:layout_constraintTop_toBottomOf="@id/iconBarrier">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -108,40 +149,106 @@
                 android:text="@string/user_email"
                 android:textSize="16sp" />
 
-            <RelativeLayout
+            <!-- Lessons Progress Box -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp">
+                android:layout_marginTop="32dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:contentPadding="16dp">
 
-                <TextView
-                    android:id="@+id/tvProgressLabel"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/overall_progress"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="?android:attr/textColorPrimary" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvProgressPercent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="@string/progress_percentage"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/blue_primary" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-            </RelativeLayout>
+                        <TextView
+                            android:id="@+id/tvLessonsLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/completed_lessons_label"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
 
-            <ProgressBar
-                android:id="@+id/pbOverallProgress"
-                style="?android:attr/progressBarStyleHorizontal"
+                        <TextView
+                            android:id="@+id/tvLessonsPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="0%"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbLessonsProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:progress="0"
+                        android:progressTint="@color/blue_primary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Quizzes Progress Box -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:progress="0"
-                android:progressTint="@color/blue_primary" />
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:contentPadding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/tvQuizzesLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/completed_quizzes_label"
+                            android:textColor="?android:attr/textColorPrimary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvQuizzesPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="0%"
+                            android:textColor="@color/blue_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbQuizzesProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:progress="0"
+                        android:progressTint="@color/blue_primary" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -156,318 +263,459 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="?attr/colorSurface">
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent">
 
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:columnCount="3"
                     android:alignmentMode="alignMargins"
-                    android:rowOrderPreserved="false">
+                    android:columnCount="2"
+                    android:padding="0dp">
 
                     <!-- Learner -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeLearnerLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_learn"
-                            android:contentDescription="@string/badge_learner"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_learner"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_learner"
+                                android:src="@drawable/ic_learn"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_learner"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- Quizzer -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeQuizzerLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_quiz"
-                            android:contentDescription="@string/badge_quizzer"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_quizzer"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_quizzer"
+                                android:src="@drawable/ic_quiz"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_quizzer"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                     <!-- Polyglot -->
-                    <LinearLayout
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgePolyglotLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_translate"
-                            android:contentDescription="@string/badge_polyglot"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_polyglot"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Hangul -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_polyglot"
+                                android:src="@drawable/ic_translate"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_polyglot"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Scholar (Alphabet) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeAlphabetLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_alphabet"
-                            android:contentDescription="@string/badge_alphabet"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_alphabet"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Numbers -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_alphabet"
+                                android:src="@drawable/ic_alphabet"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_alphabet"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Mathematician (Numbers) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeNumbersLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_numbers"
-                            android:contentDescription="@string/badge_numbers"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_numbers"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Greetings -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_numbers"
+                                android:src="@drawable/ic_numbers"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_numbers"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Polite (Greetings) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeGreetingsLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_greetings"
-                            android:contentDescription="@string/badge_greetings"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_greetings"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Food -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_greetings"
+                                android:src="@drawable/ic_greetings"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_greetings"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Gourmet (Food) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeFoodLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_food"
-                            android:contentDescription="@string/badge_food"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_food"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Places -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_food"
+                                android:src="@drawable/ic_food"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_food"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Wayfarer (Places) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgePlacesLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_places"
-                            android:contentDescription="@string/badge_places"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_places"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Colors -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_places"
+                                android:src="@drawable/ic_places"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_places"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Artist (Colors) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeColorsLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:id="@+id/ivBadgeColors"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_colors"
-                            android:contentDescription="@string/badge_colors"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_colors"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Family -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_colors"
+                                android:src="@drawable/ic_colors"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_colors"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Relative (Family) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeFamilyLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_family"
-                            android:contentDescription="@string/badge_family"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_family"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Verbs -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_family"
+                                android:src="@drawable/ic_family"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_family"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Active (Verbs) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeVerbsLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_verbs"
-                            android:contentDescription="@string/badge_verbs"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_verbs"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
 
-                    <!-- Time -->
-                    <LinearLayout
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_verbs"
+                                android:src="@drawable/ic_verbs"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_verbs"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Chronos (Time) -->
+                    <com.google.android.material.card.MaterialCardView
                         android:id="@+id/badgeTimeLayout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_rowWeight="1"
                         android:layout_columnWeight="1"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:layout_margin="8dp"
                         android:alpha="0.3"
-                        android:padding="8dp">
-                        <ImageView
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:src="@drawable/ic_time"
-                            android:contentDescription="@string/badge_time"
-                            app:tint="@color/korean_blue" />
-                        <TextView
-                            android:layout_width="wrap_content"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="4dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:text="@string/badge_time"
-                            android:textSize="11sp"
-                            android:textAlignment="center" />
-                    </LinearLayout>
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="16dp">
+
+                            <ImageView
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:contentDescription="@string/badge_time"
+                                android:src="@drawable/ic_time"
+                                app:tint="@color/blue_primary" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:text="@string/badge_time"
+                                android:textColor="?android:attr/textColorPrimary"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
 
                 </GridLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -475,4 +723,73 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Side Navigation Menu -->
+    <LinearLayout
+        android:id="@+id/side_drawer"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?attr/colorSurface"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:background="@color/korean_blue"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/drawerLogo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:text="@string/logo_text"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/drawerSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/drawerLogo"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/drawerLogo"
+                android:text="@string/subtitle_text"
+                android:textColor="@android:color/white"
+                android:textSize="16sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/drawerHome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Home"
+            android:textSize="18sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground" />
+
+
+        <TextView
+            android:id="@+id/drawerSettings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Settings"
+            android:textSize="18sp"
+            android:textColor="?android:attr/textColorPrimary"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground" />
+
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

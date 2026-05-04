@@ -224,14 +224,6 @@
                     android:textColor="@color/primary_blue" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnFeedback"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:text="@string/feedback_title" />
 
             <Button
                 android:id="@+id/btnLogout"

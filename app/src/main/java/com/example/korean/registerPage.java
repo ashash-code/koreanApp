@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
 import android.util.Log;
 import android.util.Patterns;
 
-public class registerPage extends AppCompatActivity {
+public class registerPage extends BaseActivity {
 
     public Button btnRegister;
     public TextView tvGoToLogin, tvPasswordRequirements;

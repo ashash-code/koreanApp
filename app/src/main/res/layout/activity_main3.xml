@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".categoriesPage">
+    android:background="?android:attr/windowBackground"
+    tools:context=".lessonCatPage">
 
     <!-- Header Section -->
     <View
@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="@string/learning_topics"
+        android:text="Quiz Topics"
         android:textColor="@android:color/white"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/tvLogo"
@@ -109,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_alphabet"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -121,18 +121,20 @@
                         android:textSize="12sp" />
 
                     <ProgressBar
+                        android:id="@+id/pbAlphabet"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
                         android:layout_marginTop="12dp"
-                        android:progress="60"
+                        android:progress="0"
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvAlphabetPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="60%"
+                        android:text="0%"
                         android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -167,23 +169,25 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_numbers"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbNumbers"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
                         android:layout_marginTop="12dp"
-                        android:progress="30"
+                        android:progress="0"
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvNumbersPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="30%"
+                        android:text="0%"
                         android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -218,23 +222,25 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_greetings"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbGreetings"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
                         android:layout_marginTop="12dp"
-                        android:progress="10"
+                        android:progress="0"
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvGreetingsPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="10%"
+                        android:text="0%"
                         android:textSize="12sp" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -269,11 +275,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_food"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbFood"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -282,6 +289,7 @@
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvFoodPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -320,11 +328,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_places"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbPlaces"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -333,6 +342,7 @@
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvPlacesPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -371,11 +381,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_colors"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbColors"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -384,6 +395,7 @@
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvColorsPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -422,11 +434,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_family"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbFamily"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -435,6 +448,7 @@
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvFamilyPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -473,11 +487,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_verbs"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbVerbs"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -486,6 +501,7 @@
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvVerbsPercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
@@ -524,11 +540,12 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:text="@string/cat_time"
-                        android:textColor="@color/black"
+                        android:textColor="@color/blue_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ProgressBar
+                        android:id="@+id/pbTime"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="4dp"
@@ -537,6 +554,7 @@
                         android:progressTint="@color/blue_primary" />
 
                     <TextView
+                        android:id="@+id/tvTimePercent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"

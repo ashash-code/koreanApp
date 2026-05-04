@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -28,7 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     public Button btnLogin, btnGoogleSignIn;
     public TextView tvGoToRegister;
     public EditText etEmail, etPassword;
@@ -40,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Apply Dark Mode from Settings
+        SharedPreferences prefs = getSharedPreferences("KLearnPrefs", MODE_PRIVATE);
+        boolean isDarkMode = prefs.getBoolean("dark_mode", false);
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -150,6 +159,26 @@ public class MainActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            String email = user.getEmail();
+                            String name = user.getDisplayName();
+
+                            // If name is null, use email prefix
+                            if (name == null || name.isEmpty()) {
+                                if (email != null && email.contains("@")) {
+                                    name = email.split("@")[0];
+                                } else {
+                                    name = "User";
+                                }
+                            }
+
+                            // Save Google Sign-In user to local SQLite if not exists
+                            if (email != null && !db.checkEmail(email)) {
+                                db.addUser(name, email, "google_authenticated");
+                            }
+                        }
+
                         Toast.makeText(MainActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(MainActivity.this, mainMenu.class);
                         startActivity(intent);
